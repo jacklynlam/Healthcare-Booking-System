@@ -1,29 +1,14 @@
-import BookingForm from '../components/BookingForm'; // Import BookingForm component
-import 'bootstrap/dist/css/bootstrap.min.css';
-import '../index.css';
-
-
-export default function BookingPage() {
-      
-  return (
-    <BookingForm/>
-                      
-  );
-}
-
-
-
-/*import { Button, Card, Col, Container, Form, Row, Spinner } from 'react-bootstrap';
+import { Button, Card, Col, Container, Form, Row, Spinner } from 'react-bootstrap';
 import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../components/AuthProvider';
+import { format, setHours, setMinutes, addDays } from "date-fns";
+import { toast } from 'react-toastify';
 import '../index.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { format, setHours, setMinutes, addDays } from "date-fns";
-import { toast } from 'react-toastify';
 
 export default function BookingPage() {
   const { currentUser } = useContext(AuthContext);
@@ -33,9 +18,7 @@ export default function BookingPage() {
 
   const currentDate = new Date();
 
-  const startDate = setHours(setMinutes(new Date(), 0), 9);
-
-  const filterPassedTime = (time) => {
+    const filterPassedTime = (time) => {
     const currentDate = new Date();
     const selectedDate = new Date(time);
     return currentDate.getTime() < selectedDate.getTime();
@@ -229,4 +212,3 @@ export default function BookingPage() {
     </div>
   );
 }
-*/

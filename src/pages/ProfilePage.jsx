@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Table, Button, Modal, Form } from 'react-bootstrap';
 import { AuthContext } from '../components/AuthProvider';
 import { format } from 'date-fns';
-
+import { useNavigate } from 'react-router-dom';
 
 export default function ProfilePage() {
   const [bookings, setBookings] = useState([]);
@@ -14,21 +14,29 @@ export default function ProfilePage() {
   const [currentBooking, setCurrentBooking] = useState({});
   const [bookingStatus, setBookingStatus] = useState('');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-const [deleteBookingId, setDeleteBookingId] = useState(null);
+  const [deleteBookingId, setDeleteBookingId] = useState(null);
 
-  // Assuming you store your auth token somewhere, like in localStorage
-  const authToken = localStorage.getItem('authToken');
-
-  
-  
   const { currentUser } = useContext(AuthContext);
-  const userId = currentUser.id;
-
-
+  const navigate = useNavigate();
+  const authToken = localStorage.getItem('authToken');
+  
+  useEffect(() => {
+    if (currentUser && authToken) {
+      console.log("Current User", currentUser);
+      fetchBookings();
+    } else {
+          navigate('/login');
+    }
+  }, [currentUser?.id, authToken, navigate]);
+  
+  const url = "https://ca9c67d4-baee-40ef-bf05-7e2bc6af30a2-00-31ncxb5xkwizx.janeway.replit.dev";
+  
   const fetchBookings = async () => {
+    if (!currentUser?.id) return;
+
     try {
       setLoading(true);
-      const response = await axios.get(`https://ca9c67d4-baee-40ef-bf05-7e2bc6af30a2-00-31ncxb5xkwizx.janeway.replit.dev/booking/${userId}`, {
+      const response = await axios.get(`${url}/booking/${currentUser.id}`, {
         headers: {
           Authorization: `Bearer ${authToken}`,
         }
@@ -38,20 +46,14 @@ const [deleteBookingId, setDeleteBookingId] = useState(null);
         booking_date: format(new Date(booking.booking_date), 'yyyy-MM-dd'),
       }))
       setBookings(formattedBookings);
-      setLoading(false);
     } catch (error) {
-      console.error("Failed to fetch bookings:", error.response ? error.response.data : error.message);
-      setError('Failed to fetch bookings: ' + (error.response ? error.response.data : error.message));
+      console.error("Failed to fetch bookings:", error);
+      setError(`Failed to fetch bookings: ${error.response ? (error.response.data.error || JSON.stringify(error.response.data)) : error.message}`);
     } finally {
       setLoading(false);
     }
   };
-  useEffect(() => {
-    console.log(currentUser);
-    fetchBookings();
-  }, [userId, authToken]); // Re-fetch when userId or authToken changes
-
-  // Handle input change for the edit form
+   
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setCurrentBooking({ ...currentBooking, [name]: value });
@@ -64,7 +66,7 @@ const [deleteBookingId, setDeleteBookingId] = useState(null);
 
   const deleteBooking = async () => {
     try {
-      await axios.delete(`https://ca9c67d4-baee-40ef-bf05-7e2bc6af30a2-00-31ncxb5xkwizx.janeway.replit.dev/booking/${deleteBookingId}`, {
+      await axios.delete(`${url}/booking/${deleteBookingId}`, {
         headers: {
           Authorization: `Bearer ${authToken}`,
         }
@@ -98,13 +100,13 @@ const [deleteBookingId, setDeleteBookingId] = useState(null);
       status: currentBooking.status,
     };
 
-   /* if (currentUser.isAdmin && 'status' in currentBooking) {
-      bookingData.status = currentBooking.status;
-    } */
+    /* if (currentUser.isAdmin && 'status' in currentBooking) {
+       bookingData.status = currentBooking.status;
+     } */
 
     try {
       await axios.put(
-        `https://ca9c67d4-baee-40ef-bf05-7e2bc6af30a2-00-31ncxb5xkwizx.janeway.replit.dev/booking/${currentBooking.booking_id}`,
+        `${url}/booking/${currentBooking.booking_id}`,
         bookingData,
         {
           headers: {
@@ -124,7 +126,7 @@ const [deleteBookingId, setDeleteBookingId] = useState(null);
     e.preventDefault();
     try {
       await axios.put(
-        `https://ca9c67d4-baee-40ef-bf05-7e2bc6af30a2-00-31ncxb5xkwizx.janeway.replit.dev/booking/${currentBooking.booking_id}`,
+        `${url}/booking/${currentBooking.booking_id}`,
         { status: bookingStatus },
         { headers: { Authorization: `Bearer ${authToken}` } }
       );
@@ -168,13 +170,13 @@ const [deleteBookingId, setDeleteBookingId] = useState(null);
                 <td>{booking.description}</td>
                 <td>{booking.status}</td>
                 <td>
-                <Button variant="primary" onClick={() => openEditModal(booking)}>Edit</Button>
-        {' '}
-        {currentUser.isAdmin && (
-          <Button variant="info" onClick={() => openAdminEditModal(booking)}>Edit Status</Button>
-        )}
-        {' '}
-        <Button variant="danger" onClick={() => openDeleteModal(booking.booking_id)}>Delete</Button>
+                  <Button variant="primary" onClick={() => openEditModal(booking)}>Edit</Button>
+                  {' '}
+                  {currentUser.isAdmin && (
+                    <Button variant="info" onClick={() => openAdminEditModal(booking)}>Edit Status</Button>
+                  )}
+                  {' '}
+                  <Button variant="danger" onClick={() => openDeleteModal(booking.booking_id)}>Delete</Button>
                 </td>
               </tr>
             ))}
@@ -237,38 +239,38 @@ const [deleteBookingId, setDeleteBookingId] = useState(null);
       </Modal>
 
       <Modal show={showAdminEditModal} onHide={() => setShowAdminEditModal(false)}>
-  <Modal.Header closeButton>
-    <Modal.Title>Edit Booking Status</Modal.Title>
-  </Modal.Header>
-  <Modal.Body>
-    <Form onSubmit={handleAdminEditSubmit}>
-      <Form.Group className="mb-3">
-        <Form.Label>Status</Form.Label>
-        <Form.Control as="select" value={bookingStatus} onChange={(e) => setBookingStatus(e.target.value)}>
-          <option value="pending">Pending</option>
-          <option value="confirmed">Confirmed</option>
-          <option value="cancelled">Cancelled</option>
-        </Form.Control>
-      </Form.Group>
-      <Button variant="primary" type="submit">Save Changes</Button>
-    </Form>
-  </Modal.Body>
-</Modal>
+        <Modal.Header closeButton>
+          <Modal.Title>Edit Booking Status</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form onSubmit={handleAdminEditSubmit}>
+            <Form.Group className="mb-3">
+              <Form.Label>Status</Form.Label>
+              <Form.Control as="select" value={bookingStatus} onChange={(e) => setBookingStatus(e.target.value)}>
+                <option value="pending">Pending</option>
+                <option value="confirmed">Confirmed</option>
+                <option value="cancelled">Cancelled</option>
+              </Form.Control>
+            </Form.Group>
+            <Button variant="primary" type="submit">Save Changes</Button>
+          </Form>
+        </Modal.Body>
+      </Modal>
 
       <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)} centered>
-  <Modal.Header closeButton>
-    <Modal.Title>Confirm Delete</Modal.Title>
-  </Modal.Header>
-  <Modal.Body>Are you sure you want to delete this booking?</Modal.Body>
-  <Modal.Footer>
-    <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
-      Cancel
-    </Button>
-    <Button variant="danger" onClick={deleteBooking}>
-      Delete
-    </Button>
-  </Modal.Footer>
-</Modal>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Delete</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Are you sure you want to delete this booking?</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
+            Cancel
+          </Button>
+          <Button variant="danger" onClick={deleteBooking}>
+            Delete
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }
