@@ -6,7 +6,7 @@ import { format } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
 
 
-export default function ProfilePage() {
+export default function BookingTable() {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -24,6 +24,7 @@ const [deleteBookingId, setDeleteBookingId] = useState(null);
   const navigate = useNavigate();
   
   useEffect(() => {
+    console.log(currentUser);
     if (!currentUser) {
       navigate('/login');
     } else {
@@ -54,6 +55,7 @@ const [deleteBookingId, setDeleteBookingId] = useState(null);
     }
   };
   useEffect(() => {
+    console.log(currentUser);
     fetchBookings();
   }, [userId, authToken]); // Re-fetch when userId or authToken changes
 

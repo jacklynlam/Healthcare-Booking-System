@@ -5,6 +5,7 @@ import AuthPage from './pages/AuthPage';
 import BookingPage from './pages/BookingPage';
 import WelcomePage from './pages/WelcomePage';
 import ProfilePage from './pages/ProfilePage';
+import ContactPage from './pages/ContactPage';
 import ErrorPage from './pages/ErrorPage';
 import Layout from './components/Layout';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -19,6 +20,7 @@ export default function App() {
             <Route path="/booking" element={<BookingPage />} />
             <Route path="/login" element={<AuthPage />} />
             <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/contact" element={<ContactPage />} />
             <Route path="*" element={<ErrorPage />} />
           </Route>
         </Routes>

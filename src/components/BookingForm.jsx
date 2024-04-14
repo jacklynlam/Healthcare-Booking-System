@@ -15,14 +15,6 @@ export default function BookingPage() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState("");
   const [selectedDate, setSelectedDate] = useState(null);
-
-  const currentDate = new Date();
-
-    const filterPassedTime = (time) => {
-    const currentDate = new Date();
-    const selectedDate = new Date(time);
-    return currentDate.getTime() < selectedDate.getTime();
-  };
   const [form, setForm] = useState({
     patientName: '',
     location: '',
@@ -35,20 +27,42 @@ export default function BookingPage() {
     description: ''
   });
 
+  const doctors = [
+    { name: 'Dr Anis Zulaikha', service: 'Cardiology', location: 'Damansara' },
+    { name: 'Dr Aadli Nadzmi', service: 'Dentistry', location: 'Subang Jaya' },
+    { name: 'Dr Benjamin Bong', service: 'Neurology', location: 'Penang' },
+    { name: 'Dr Heng Ren Qiu', service: 'Psychiatry', location: 'Malacca' },
+    { name: 'Dr Mohd Azri', service: 'Gynaecology', location: 'Damansara' },
+    { name: 'Dr Ng Chi Seong', service: 'Urology', location: 'Penang' },
+    { name: 'Dr Raymond Kong', service: 'Paediatrics', location: 'Subang Jaya' },
+    { name: 'Dr Suriah Selvam', service: 'Anaesthesiology and Critical Care', location: 'Malacca' }
+  ];
+
+  const availableDoctors = doctors.filter(doctor =>
+  doctor.location === form.location && doctor.service === form.service)
+
   useEffect(() => {
     if (!currentUser) {
       navigate('/login');
     }
   }, [currentUser, navigate]);
 
+  const currentDate = new Date();
+
+    const filterPassedTime = (time) => {
+    const currentDate = new Date();
+    const selectedDate = new Date(time);
+    return currentDate.getTime() < selectedDate.getTime();
+  };
+    
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+  }
+
   const handleChange = (event) => {
     const { name, value } = event.target;
     setForm(prevForm => ({ ...prevForm, [name]: value }));
   };
-
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  }
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -78,19 +92,18 @@ export default function BookingPage() {
     console.log('Auth Token:', authToken);
 
     if (!authToken) {
-      alert("No auth token found. Please log in again.");
+      alert("Authentication token not found. Please log in again.");
       setLoading(false);
       navigate('/login');
-      return; // Stop the function if there is no token
+      return;
     }
 
     console.log(('Submission Data:', submissionData));
 
-    // Get token from local storage
     try {
       const response = await axios.post(
         "https://ca9c67d4-baee-40ef-bf05-7e2bc6af30a2-00-31ncxb5xkwizx.janeway.replit.dev/booking",
-        submissionData, // Pass form data as the request body
+        submissionData, 
         {
           headers: {
             Authorization: `Bearer ${authToken}`,
@@ -103,13 +116,26 @@ export default function BookingPage() {
         autoClose: 2000,
         position: "top-center",
       });
+      setForm({  // Reset form after successful submission
+        patientName: '',
+        location: '',
+        service: '',
+        doctor: '',
+        bookingDate: '',
+        bookingTime: '',
+        contactNumber: '',
+        email: '',
+        description: ''
+      });
+      setSelectedDate(null);  // Clear the date picker
+      navigate('/profile');  // Redirect to ProfilePage
     } catch (error) {
       console.error(error);
       toast.error("Error submitting booking!", {
         autoClose: 2000,
         position: "top-center",
       });
-    } finally {
+      } finally {
       setLoading(false); // Set loading to false when the API call completes
     }
   };
@@ -125,11 +151,11 @@ export default function BookingPage() {
                 <Form onSubmit={handleSubmit}>
                   <Form.Group className="mb-3">
                     <Form.Label>Patient Name</Form.Label>
-                    <Form.Control type="text" name="patientName" value={form.patientName} onChange={handleChange} placeholder="Enter patient name" />
+                    <Form.Control type="text" name="patientName" value={form.patientName} onChange={handleChange} placeholder="Enter patient name" required />
                   </Form.Group>
                   <Form.Group className="mb-3">
                     <Form.Label>Location</Form.Label>
-                    <Form.Control as="select" name="location" value={form.location} onChange={handleChange}>
+                    <Form.Control as="select" name="location" value={form.location} onChange={handleChange} required>
                       <option value="" disabled selected>Select a location</option>
                       <option value="Damansara">Damansara</option>
                       <option value="Subang Jaya">Subang Jaya</option>
@@ -139,7 +165,7 @@ export default function BookingPage() {
                   </Form.Group>
                   <Form.Group className="mb-3">
                     <Form.Label>Service</Form.Label>
-                    <Form.Control as="select" name="service" value={form.service} onChange={handleChange}>
+                    <Form.Control as="select" name="service" value={form.service} onChange={handleChange} required>
                     <option value="" disabled selected>Select a service</option>
                       <option value="Anaesthesiology and Critical Care">Anaesthesiology and Critical Care</option>
                       <option value="Cardiology">Cardiology</option>
@@ -153,16 +179,11 @@ export default function BookingPage() {
                   </Form.Group>
                   <Form.Group className="mb-3">
                     <Form.Label>Doctor</Form.Label>
-                    <Form.Control as="select" name="doctor" value={form.doctor} onChange={handleChange}>
+                    <Form.Control as="select" name="doctor" value={form.doctor} onChange={handleChange} required>
                     <option value="" disabled selected>Select a doctor</option>
-                      <option value="Dr Anis Zulaikha">Dr Anis Zulaikha</option>
-                      <option value="Dr Aadli Nadzmi">Dr Aadli Nadzmi</option>
-                      <option value="Dr Benjamin Bong">Dr Benjamin Bong</option>
-                      <option value="Dr Heng Ren Qiu">Dr Heng Ren Qiu</option>
-                      <option value="Dr Mohd Azri">Dr Mohd Azri</option>
-                      <option value="Dr Ng Chi Seong">Dr Ng Chi Seong</option>
-                      <option value="Dr Raymond Kong">Dr Raymond Kong</option>
-                      <option value="Dr Suriah Selvam">Dr Suriah Selvam</option>
+                      {availableDoctors.map((doctor, index) => (
+                        <option key={index} value={doctor.name}>{doctor.name}</option>
+                      ))}
                       </Form.Control>
                   </Form.Group>
                   <Form.Group className="mb-3">
@@ -179,20 +200,21 @@ export default function BookingPage() {
                       minDate={addDays(currentDate, 1)}
                       minTime={setHours(setMinutes(new Date(), 0), 9)}
                       maxTime={setHours(setMinutes(new Date(), 30), 20)}
+                      required
                     />
                   </Form.Group>
 
                   <Form.Group className="mb-3">
                     <Form.Label>Contact Number</Form.Label>
-                    <Form.Control type="tel" name="contactNumber" value={form.contactNumber} onChange={handleChange} placeholder="Enter contact number" />
+                    <Form.Control type="tel" name="contactNumber" value={form.contactNumber} onChange={handleChange} placeholder="Enter contact number" required/>
                   </Form.Group>
                   <Form.Group className="mb-3">
                     <Form.Label>Email</Form.Label>
-                    <Form.Control type="email" name="email" value={form.email} onChange={handleChange} placeholder="Enter email" />
+                    <Form.Control type="email" name="email" value={form.email} onChange={handleChange} placeholder="Enter email" required/>
                   </Form.Group>
                   <Form.Group className="mb-3">
                     <Form.Label>Description</Form.Label>
-                    <Form.Control as="textarea" rows={3} name="description" value={form.description} onChange={handleChange} placeholder="Enter appointment details" />
+                    <Form.Control as="textarea" rows={3} name="description" value={form.description} onChange={handleChange} placeholder="Enter appointment details" required/>
                   </Form.Group>
                   <div className="d-grid">
                     {loading ? (

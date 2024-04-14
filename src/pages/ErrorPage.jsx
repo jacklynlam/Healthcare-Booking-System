@@ -11,7 +11,7 @@ export default function ErrorPage() {
         <p>Here are some helpful links instead:</p>
         <div>
           <Button variant="primary" as={Link} to="/" style={{ margin: '0 10px' }}>Home</Button>
-          <Button variant="outline-secondary" as={Link} to="/appointments" style={{ margin: '0 10px' }}>My Appointments</Button>
+          <Button variant="outline-secondary" as={Link} to="/profile" style={{ margin: '0 10px' }}>My Appointments</Button>
           <Button variant="outline-secondary" as={Link} to="/contact" style={{ margin: '0 10px' }}>Contact Us</Button>
         </div>
       </Container>

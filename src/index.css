@@ -40,3 +40,28 @@ body {
 .professional-table tr:hover {
   background-color: #e8e8e8; /* Lighter grey for hover */
 }
+
+.g-map {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+}
+
+/* CSS styles */
+.col:hover {
+  transform: scale(1.03);
+  transition: all 0.3s ease-in-out;
+}
+
+/* In your CSS file */
+.location-header {
+  margin-bottom: '20px';
+  font-size: '48px';
+  color: '#0a58ca';
+  text-align: 'left';
+}
+
+
+
