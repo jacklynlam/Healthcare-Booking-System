@@ -13,7 +13,7 @@ export default function Locations() {
     {
       name: "Damansara",
       src: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3983.7909302901594!2d101.59299917567603!3d3.1497813531473158!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31cc4f08db2454dd%3A0x27876cfecc9fd89c!2sSunway%20Specialist%20Centre%20Damansara!5e0!3m2!1sen!2smy!4v1712906474391!5m2!1sen!2smy",
-      address: "Sunway Nexis Retails, Jalan PJU 5/1, Kota Damansara, 47810, Petaling Jaya, Selangor",
+      address: "Sunway Retails, Jalan PJU 5/1, Kota Damansara, 47810, Petaling Jaya, Selangor",
       tel: "03-5131-9028",
       whatsapp: "601612345678"
     },
@@ -39,19 +39,19 @@ export default function Locations() {
       <Row>
         {locations.map((location, idx) => (
           <Col md={6} className="mb-4" key={idx}>
-            <Card className="h-100 location-card" style={{
+            <Card className="location-card shadow-sm" style={{
               backgroundColor: 'rgba(255, 255, 255, 0.5)',
               borderRadius: '10px',
               overflow: 'hidden',
               boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)'
             }}>
               <Card.Body>
-                <h3 className="location-title">{location.name}</h3>
+                <h3 className="location-title mb-3">{location.name}</h3>
                 <p>{location.address}</p>
-                <div className="g-map">
+                <div className="g-map mb-3">
                   <iframe
                     width="100%"
-                    height="350"
+                    height="250"
                     style={{ border: 'none' }}
                     src={location.src}
                     allowFullScreen

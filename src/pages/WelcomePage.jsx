@@ -1,6 +1,6 @@
 import { Button, Container } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import Locations from '../components/Locations';
+
 
 export default function WelcomePage() {
     const navigate = useNavigate();
@@ -9,9 +9,13 @@ export default function WelcomePage() {
         navigate('/login');
     };
 
+    const goToFindDoctor = () => {
+        navigate('/finddoctor');
+    };
+
     return (
         <div className="welcome-page-bg" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-            <Container className="d-flex justify-content-center align-items-start p-5" style={{ flex: '1 0 auto' }}>
+            <Container className="d-flex justify-content-center align-items-center p-5" style={{ flex: '1 0 auto' }}>
                 <div className="text-center p-5" style={{ 
                     backgroundColor: 'rgba(0, 0, 0, 0.5)', 
                     color: 'white', 
@@ -28,11 +32,13 @@ export default function WelcomePage() {
                     <Button onClick={goToAuth} variant="primary" size="lg">
                         Book an Appointment Today
                     </Button>
+                    <Button className = "mt-4" 
+                    onClick={goToFindDoctor} variant="primary" size="lg">
+                        Find a Moonway Hospital Doctor
+                    </Button>
                 </div>
             </Container>
-            <Container style={{ padding: '30px 0', backgroundColor: '#f7f7f7', textAlign: 'center', borderRadius: '15px' }}>
-                <Locations />
-            </Container>
-        </div>
+            
+           </div>
     );
 }

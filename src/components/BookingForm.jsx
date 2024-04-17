@@ -11,6 +11,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
 export default function BookingPage() {
+  
   const { currentUser } = useContext(AuthContext);
   const navigate = useNavigate();
   const [loading, setLoading] = useState("");
@@ -26,6 +27,17 @@ export default function BookingPage() {
     email: '',
     description: ''
   });
+
+  /*useEffect(() => {
+    if (state && state.doctor) {
+      setForm(prevForm => ({
+        ...prevForm,
+        doctor: state.doctor.name,
+        service: state.doctor.specialty,
+        location: state.doctor.location
+      }));
+    }
+  }, [state]); */
 
   const doctors = [
     { name: 'Dr Anis Zulaikha', service: 'Cardiology', location: 'Damansara' },
@@ -169,11 +181,15 @@ export default function BookingPage() {
                     <option value="" disabled selected>Select a service</option>
                       <option value="Anaesthesiology and Critical Care">Anaesthesiology and Critical Care</option>
                       <option value="Cardiology">Cardiology</option>
-                      <option value="Dentistry">Dentistry</option>
+                      <option value="General Surgery">General Surgery</option>
                       <option value="Gynaecology">Gynaecology</option>
                       <option value="Neurology">Neurology</option>
+                      <option value="Ophthalmology">Ophthalmology</option>
                       <option value="Paediatrics">Paediatrics</option>
                       <option value="Psychiatry">Psychiatry</option>
+                      <option value="Radiology">Radiology</option>
+                      <option value="Spine Surgery">Spine Surgery</option>
+                      <option value="Thoracic Radiology">Thoracic Radiology</option>
                       <option value="Urology">Urology</option>
                     </Form.Control>
                   </Form.Group>

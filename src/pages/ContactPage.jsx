@@ -1,13 +1,18 @@
-import { Container, Button } from 'react-bootstrap';
-import { Link } from 'react-router-dom'; 
+import { Col, Container, Button, Row } from 'react-bootstrap';
 import Locations from '../components/Locations'; // Assuming you're using react-router for navigation
+import EnquiryForm from '../components/EnquiryForm';
 
 export default function ErrorPage() {
   return (
-    <div style={{ padding: '30px 0', textAlign: 'center', backgroundColor: '#f7f7f7', minHeight: '150vh', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-      <Container>
-        <Locations/>
-      </Container>
-    </div>
+    <Container fluid>
+    <Row>
+      <Col md={8} md={12} className="mb-4"> {/* Adjust the size as needed */}
+        <Locations />
+      </Col>
+      <Col md={4}  md={12} className="mb-4"> {/* Adjust the size as needed */}
+        <EnquiryForm />
+      </Col>
+    </Row>
+  </Container>
   );
 }
