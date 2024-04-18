@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { db, storage } from "../firebase";
 import { AuthContext } from "../components/AuthProvider";
+import { Card, Col, Row } from 'react-bootstrap';
 
 export default function Profile() {
     const auth = getAuth();
@@ -30,6 +31,7 @@ export default function Profile() {
                 const userDoc = await getDoc(userRef);
                 if (userDoc.exists()) {
                     const data = userDoc.data();
+                    console.log(data);
                     setFormData({
                         username: data.username || currentUser.displayName,
                         email: currentUser.email,
@@ -39,6 +41,8 @@ export default function Profile() {
                     });
                 } else {
                     // Set formData from currentUser if the Firestore document is missing
+                    console.log('ran');
+                    console.log(currentUser)
                     setFormData({
                         username: currentUser.displayName || '',
                         email: currentUser.email,
@@ -80,9 +84,9 @@ export default function Profile() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-    
+
         let photoURL = formData.photoURL; // Keep this outside to use in all blocks
-    
+
         // Handle file upload separately
         if (file) {
             try {
@@ -97,7 +101,7 @@ export default function Profile() {
                 return;  // Stop further execution if file upload fails
             }
         }
-    
+
         // Update Firebase Auth profile
         try {
             console.log('Updating Firebase Auth profile...');
@@ -109,7 +113,7 @@ export default function Profile() {
             setLoading(false);
             return;  // Stop further execution if auth update fails
         }
-    
+
         // Update Firestore document
         try {
             console.log('Updating Firestore document...');
@@ -129,15 +133,19 @@ export default function Profile() {
         } finally {
             setLoading(false);
         }
-    
+
         // Optionally navigate to another route on success
         navigate("/profile"); // Adjust according to your routing needs
     }
-    
+
     return (
-        <div className="container mt-5">
-            <h1 className="mb-3">Update Profile</h1>
-            <form onSubmit={handleSubmit}>
+        <div className="container mt-3">
+            <Row className="justify-content-center align-items-center" style={{ minHeight: '10vh' }}>
+          <Col lg={10} md={6}>
+            <Card className="m-4 p-4" style={{ backgroundColor: 'rgba(255, 255, 255, 0.8)', border: 'none', borderRadius: '15px' }}>
+              <Card.Header as="h4" className="text-center bg-primary text-white">Profile</Card.Header>
+              <Card.Body>
+                        <form onSubmit={handleSubmit}>
                 <div className="mb-3">
                     <label htmlFor="photoURL" className="form-label">Profile Picture</label>
                     <input type="file" className="form-control" id="photoURL" onChange={handleImageChange} />
@@ -165,6 +173,10 @@ export default function Profile() {
                     {loading ? "Updating..." : "Update Profile"}
                 </button>
             </form>
+            </Card.Body>
+            </Card>
+            </Col>
+            </Row>
         </div>
     );
 }

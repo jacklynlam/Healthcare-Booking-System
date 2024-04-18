@@ -35,15 +35,20 @@ export default function Locations() {
 
   return (
     <Container id="locations" className="mb-5 p-4 location-container" style={{ paddingTop: "2rem",  }}>
-      <h1 className="location-header" style={{ marginBottom: "2rem" }}>Locations</h1>
+      <Row className="justify-content-center align-items-center" style={{ minHeight: '10vh' }}>
+<Col lg={10} md={8}>
+  <Card className="m-4 p-4" style={{ backgroundColor: 'rgba(255, 255, 255, 0.8)', border: 'none', borderRadius: '15px' }}>
+    <Card.Header as="h3" className="text-center bg-primary text-white">Locations</Card.Header>
+    <Card.Body>
       <Row>
         {locations.map((location, idx) => (
-          <Col md={6} className="mb-4" key={idx}>
+          <Col lg={8} md={8} className="mb-4" key={idx}>
             <Card className="location-card shadow-sm" style={{
-              backgroundColor: 'rgba(255, 255, 255, 0.5)',
+              backgroundColor: 'rgba(255, 255, 255, 0.95)',
               borderRadius: '10px',
               overflow: 'hidden',
-              boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)'
+              boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+              padding: 'irem',
             }}>
               <Card.Body>
                 <h3 className="location-title mb-3">{location.name}</h3>
@@ -73,6 +78,10 @@ export default function Locations() {
             </Card>
           </Col>
         ))}
+      </Row>
+      </Card.Body>
+      </Card>
+      </Col>
       </Row>
     </Container>
   );

@@ -4,16 +4,17 @@ import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../components/AuthProvider';
 import { format, setHours, setMinutes, addDays } from "date-fns";
 import { toast } from 'react-toastify';
-import '../index.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
 import DatePicker from 'react-datepicker';
+import '../index.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-datepicker/dist/react-datepicker.css';
 
 export default function BookingPage() {
   
   const { currentUser } = useContext(AuthContext);
   const navigate = useNavigate();
+
   const [loading, setLoading] = useState("");
   const [selectedDate, setSelectedDate] = useState(null);
   const [form, setForm] = useState({
@@ -28,26 +29,43 @@ export default function BookingPage() {
     description: ''
   });
 
-  /*useEffect(() => {
-    if (state && state.doctor) {
-      setForm(prevForm => ({
-        ...prevForm,
-        doctor: state.doctor.name,
-        service: state.doctor.specialty,
-        location: state.doctor.location
-      }));
-    }
-  }, [state]); */
-
   const doctors = [
-    { name: 'Dr Anis Zulaikha', service: 'Cardiology', location: 'Damansara' },
-    { name: 'Dr Aadli Nadzmi', service: 'Dentistry', location: 'Subang Jaya' },
-    { name: 'Dr Benjamin Bong', service: 'Neurology', location: 'Penang' },
-    { name: 'Dr Heng Ren Qiu', service: 'Psychiatry', location: 'Malacca' },
-    { name: 'Dr Mohd Azri', service: 'Gynaecology', location: 'Damansara' },
-    { name: 'Dr Ng Chi Seong', service: 'Urology', location: 'Penang' },
-    { name: 'Dr Raymond Kong', service: 'Paediatrics', location: 'Subang Jaya' },
-    { name: 'Dr Suriah Selvam', service: 'Anaesthesiology and Critical Care', location: 'Malacca' }
+    { name: 'Dr Anis B', service: 'Anaesthesiology and Critical Care', location: 'Damansara' },
+    { name: 'Dr Nadzmi O', service: 'Anaesthesiology and Critical Care', location: 'Subang Jaya' },
+    { name: 'Dr Ben C', service: 'Anaesthesiology and Critical Care', location: 'Penang' },
+    { name: 'Dr Heng R', service: 'Anaesthesiology and Critical Care', location: 'Malacca' },
+    { name: 'Dr Azri B', service: 'Cardiology', location: 'Damansara' },
+    { name: 'Dr Ng CS', service: 'Cardiology', location: 'Subang Jaya' },
+    { name: 'Dr Raymond K', service: 'Cardiology', location: 'Penang' },
+    { name: 'Dr Suriah T', service: 'Cardiology', location: 'Malacca' },
+    { name: 'Dr Judy L', service: 'General Surgery', location: 'Damansara' },
+    { name: 'Dr Naseem L', service: 'General Surgery', location: 'Subang Jaya' },
+    { name: 'Dr Athreya M', service: 'General Surgery', location: 'Penang' },
+    { name: 'Dr Jon C', service: 'General Surgery', location: 'Malacca' },
+    { name: 'Dr Viv R', service: 'Gynaecology', location: 'Damansara' },
+    { name: 'Dr Bala K', service: 'Gynaecology', location: 'Subang Jaya' },
+    { name: 'Dr Chia YY', service: 'Gynaecology', location: 'Penang' },
+    { name: 'Dr Tay ST', service: 'Gynaecology', location: 'Malacca' },
+    { name: 'Dr Zulaikha Z', service: 'Neurology', location: 'Damansara' },
+    { name: 'Dr Pavitra R', service: 'Neurology', location: 'Subang Jaya' },
+    { name: 'Dr Dan T', service: 'Neurology', location: 'Penang' },
+    { name: 'Dr Ashraf A', service: 'Neurology', location: 'Malacca' },
+    { name: 'Dr Jaslyn C', service: 'Ophthalmology', location: 'Damansara' },
+    { name: 'Dr Yong HZ', service: 'Ophthalmology', location: 'Subang Jaya' },
+    { name: 'Dr Joanne L', service: 'Ophthalmology', location: 'Penang' },
+    { name: 'Dr Sarah W', service: 'Ophthalmology', location: 'Malacca' },
+    { name: 'Dr Allan T', service: 'Paediatrics', location: 'Damansara' },
+    { name: 'Dr Leslie C', service: 'Paediatrics', location: 'Subang Jaya' },
+    { name: 'Dr Naveen M', service: 'Paediatrics', location: 'Penang' },
+    { name: 'Dr Jesvin K', service: 'Paediatrics', location: 'Malacca' },
+    { name: 'Dr Tay VK', service: 'Psychiatry', location: 'Damansara' },
+    { name: 'Dr Siti S', service: 'Psychiatry', location: 'Subang Jaya' }, 
+    { name: 'Dr Ahmad A', service: 'Psychiatry', location: 'Penang' },
+    { name: 'Dr Bryan L', service: 'Psychiatry', location: 'Malacca' },
+    { name: 'Dr Oliver M', service: 'Urology', location: 'Damansara' },
+    { name: 'Dr Dinesh O', service: 'Urology', location: 'Subang Jaya' },
+    { name: 'Dr Mike D', service: 'Urology', location: 'Penang' },
+    { name: 'Dr Evelyn Y', service: 'Urology', location: 'Malacca' }
   ];
 
   const availableDoctors = doctors.filter(doctor =>
@@ -119,7 +137,7 @@ export default function BookingPage() {
         {
           headers: {
             Authorization: `Bearer ${authToken}`,
-            'Content-Type': 'application/json', // Include the token in the request headers
+            'Content-Type': 'application/json', 
           },
         }
       );
@@ -187,9 +205,6 @@ export default function BookingPage() {
                       <option value="Ophthalmology">Ophthalmology</option>
                       <option value="Paediatrics">Paediatrics</option>
                       <option value="Psychiatry">Psychiatry</option>
-                      <option value="Radiology">Radiology</option>
-                      <option value="Spine Surgery">Spine Surgery</option>
-                      <option value="Thoracic Radiology">Thoracic Radiology</option>
                       <option value="Urology">Urology</option>
                     </Form.Control>
                   </Form.Group>

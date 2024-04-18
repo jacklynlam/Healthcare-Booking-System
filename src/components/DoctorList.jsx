@@ -23,9 +23,7 @@ export default function DoctorList() {
           <Card.Body>
             <Card.Title>{doctor.name}</Card.Title>
             <ListGroup variant="flush">
-              <ListGroup.Item>Specialty: {doctor.specialty}</ListGroup.Item>
               <ListGroup.Item>Languages: {doctor.languages}</ListGroup.Item>
-              <ListGroup.Item>Gender: {doctor.gender}</ListGroup.Item>
               <ListGroup.Item>Qualifications: {doctor.qualifications}</ListGroup.Item>
               <ListGroup.Item>Location: {doctor.location}</ListGroup.Item>
               <ListGroup.Item>Contact: {doctor.contact}</ListGroup.Item>
@@ -33,7 +31,7 @@ export default function DoctorList() {
             <Button variant="primary" className="mt-3">Schedule & Detail</Button>
             <Button 
             variant="secondary" 
-            className="mt-3 ml-2"
+            className="mt-3 ms-2 ml-2"
             onClick={() => handleAppointmentEnquiry(doctor)}>
               Appointment Enquiry
               </Button>

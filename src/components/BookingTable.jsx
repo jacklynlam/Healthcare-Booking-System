@@ -1,9 +1,10 @@
 import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
-import { Container, Table, Alert, Spinner } from 'react-bootstrap';
+import { Table, Alert, Spinner } from 'react-bootstrap';
 import { AuthContext } from '../components/AuthProvider';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
+import { Card, Row, Col } from 'react-bootstrap';
 import BookingR from './BookingR';
 import EditBookingModal from './EditBookingModal';
 import DeleteBookingModal from './DeleteBookingModal';
@@ -22,9 +23,7 @@ export default function BookingTable() {
     const authToken = localStorage.getItem('authToken');
     const decodedToken = jwtDecode(authToken);
     const isAdmin = decodedToken.isAdmin; 
-    console.log(decodedToken);
-
-
+    
     const { currentUser } = useContext(AuthContext);
     const navigate = useNavigate();
     const url = 'https://ca9c67d4-baee-40ef-bf05-7e2bc6af30a2-00-31ncxb5xkwizx.janeway.replit.dev';  
@@ -110,8 +109,15 @@ export default function BookingTable() {
 
     return (
         <div>
+          
             <div style={{ marginTop: '20px' }}>
-                {loading ? <Spinner animation="border" /> : error ? <Alert variant="danger">{error}</Alert> : (
+                {loading ? <Spinner animation="border" variant="light" size="lg"/> : error ? <Alert variant="danger">{error}</Alert> : (
+
+<Row className="justify-content-center align-items-center" style={{ minHeight: '10vh' }}>
+<Col lg={10} md={6}>
+  <Card className="m-4 p-4" style={{ backgroundColor: 'rgba(255, 255, 255, 0.8)', border: 'none', borderRadius: '15px' }}>
+    <Card.Header as="h4" className="text-center bg-primary text-white">Bookings</Card.Header>
+    <Card.Body>
                   
                     <Table striped bordered hover size="sm" responsive className="text-center">
                         <thead className="thead-dark">
@@ -142,6 +148,10 @@ export default function BookingTable() {
                             ))}
                         </tbody>
                     </Table>
+                    </Card.Body>
+                    </Card>
+                    </Col>
+                    </Row>
                     
                 )}
             </div>
@@ -166,7 +176,6 @@ export default function BookingTable() {
         </div>
     );
 }
-
 
 /*import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';

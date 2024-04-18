@@ -4,26 +4,22 @@ const initialState = {
     doctors: [
         {
             id: 1,
-            name: 'Dr. Ainul Zahaniah Hj Abd Aziz',
+            name: 'Dr Anis B',
             departmentId: 1,
-            image_url: '/images/psychiatry.jpg',
-            specialty: 'Gynaecology, Obstetrics & Gynaecology',
+            image_url: '/images/doctor1.jpg',
             languages: 'English, Bahasa Malaysia',
-            gender: 'Female',
             qualifications: 'MBBS (UM), M.Med (O&G) (UM)',
-            location: 'B-2-01, 2nd Floor, Tower B',
+            location: 'Damansara',
             contact: '+603-7491 9191 (Ext. 16477)'},
            
         {
             id: 1,
-            name: 'Dr. Ainul Zahaniah Hj Abd Aziz',
+            name: 'Nadzmi O',
             departmentId: 1,
-            image_url: '/images/psychiatry.jpg',
-            specialty: 'Gynaecology, Obstetrics & Gynaecology',
+            image_url: '/images/doctor1.jpg',
             languages: 'English, Bahasa Malaysia',
-            gender: 'Female',
             qualifications: 'MBBS (UM), M.Med (O&G) (UM)',
-            location: 'B-2-01, 2nd Floor, Tower B',
+            location: 'Subang Jaya',
             contact: '+603-7491 9191 (Ext. 16477)'
         }, ],
         selectedDoctor: null,
