@@ -109,7 +109,6 @@ export default function Profile() {
             console.log('Firebase Auth profile updated successfully');
         } catch (error) {
             console.error('Failed to update Firebase Auth profile:', error);
-            toast.error("Failed to update Firebase Auth profile: " + error.message);
             setLoading(false);
             return;  // Stop further execution if auth update fails
         }
@@ -129,8 +128,7 @@ export default function Profile() {
             toast.success("Profile updated successfully!");
         } catch (error) {
             console.error('Failed to update Firestore document:', error);
-            toast.error("Failed to update Firestore document: " + error.message);
-        } finally {
+         } finally {
             setLoading(false);
         }
 

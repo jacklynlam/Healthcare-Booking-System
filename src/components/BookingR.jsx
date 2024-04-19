@@ -18,7 +18,7 @@ export default function BookingRow ({ booking, openEditModal, openDeleteModal, i
         <td>
             { (isAdmin || booking.userId === currentUserId) && (
                 <>
-            <Button variant="primary" onClick={() => openEditModal(booking)}>Edit</Button>
+            <Button variant="primary me-2 " onClick={() => openEditModal(booking)}>Edit</Button>
             <Button variant="danger" onClick={() => openDeleteModal(booking.booking_id)}>Delete</Button>
             </>
             )}

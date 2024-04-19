@@ -13,7 +13,7 @@ export default function Locations() {
     {
       name: "Damansara",
       src: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3983.7909302901594!2d101.59299917567603!3d3.1497813531473158!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31cc4f08db2454dd%3A0x27876cfecc9fd89c!2sSunway%20Specialist%20Centre%20Damansara!5e0!3m2!1sen!2smy!4v1712906474391!5m2!1sen!2smy",
-      address: "Sunway Retails, Jalan PJU 5/1, Kota Damansara, 47810, Petaling Jaya, Selangor",
+      address: "Sunway Retails, Jalan PJU 5/1, Kota Damansara, 47810, PJ, Selangor",
       tel: "03-5131-9028",
       whatsapp: "601612345678"
     },
@@ -27,28 +27,27 @@ export default function Locations() {
     {
       name: "Malacca",
       src: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3983.8742240463625!2d101.71986257567596!3d3.1279364532812464!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31cc3616ea9079ad%3A0x1adda238eab28469!2sSunway%20Medical%20Centre%20Velocity%20(SMCV)%20Tower%20B!5e0!3m2!1sen!2smy!4v1712906741988!5m2!1sen!2smy",
-      address: "Pusat Perubatan Sunway Velocity, Lingkaran Sunway Velocity, 48481, Melaka",
+      address: "Pusat Perubatan Sunway Velocity, Lingkaran Velocity, 48481, Melaka",
       tel: "03-5131-9028",
       whatsapp: "601612345678"
     },
   ];
 
   return (
-    <Container id="locations" className="mb-5 p-4 location-container" style={{ paddingTop: "2rem",  }}>
+    <Container id="locations" className="p-4 location-container" style={{ paddingTop: "2rem",  }}>
       <Row className="justify-content-center align-items-center" style={{ minHeight: '10vh' }}>
-<Col lg={10} md={8}>
+<Col lg={12} md={8}>
   <Card className="m-4 p-4" style={{ backgroundColor: 'rgba(255, 255, 255, 0.8)', border: 'none', borderRadius: '15px' }}>
-    <Card.Header as="h3" className="text-center bg-primary text-white">Locations</Card.Header>
+    <Card.Header as="h4" className="text-center bg-primary text-white">Locate Us</Card.Header>
     <Card.Body>
       <Row>
         {locations.map((location, idx) => (
-          <Col lg={8} md={8} className="mb-4" key={idx}>
+          <Col md={6} className="mb-4" key={idx}>
             <Card className="location-card shadow-sm" style={{
-              backgroundColor: 'rgba(255, 255, 255, 0.95)',
+              backgroundColor: 'rgba(255, 255, 255, 0.5)',
               borderRadius: '10px',
               overflow: 'hidden',
-              boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-              padding: 'irem',
+              boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)'
             }}>
               <Card.Body>
                 <h3 className="location-title mb-3">{location.name}</h3>
@@ -86,6 +85,7 @@ export default function Locations() {
     </Container>
   );
 }
+
 
 /*import { Col, Container, Row } from "react-bootstrap";
 import '../index.css';

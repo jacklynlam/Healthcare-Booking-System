@@ -6,22 +6,44 @@ const initialState = {
             id: 1,
             name: 'Dr Anis B',
             departmentId: 1,
-            image_url: '/images/doctor1.jpg',
+            image_url: '/images/doctor1.jpeg',
             languages: 'English, Bahasa Malaysia',
-            qualifications: 'MBBS (UM), M.Med (O&G) (UM)',
+            qualifications: 'MBBS (UM)',
             location: 'Damansara',
             contact: '+603-7491 9191 (Ext. 16477)'},
            
         {
-            id: 1,
-            name: 'Nadzmi O',
+            id: 2,
+            name: 'Dr Nadzmi O',
             departmentId: 1,
-            image_url: '/images/doctor1.jpg',
+            image_url: '/images/doctor2.jpg',
             languages: 'English, Bahasa Malaysia',
-            qualifications: 'MBBS (UM), M.Med (O&G) (UM)',
+            qualifications: 'MBBS (UM)',
             location: 'Subang Jaya',
             contact: '+603-7491 9191 (Ext. 16477)'
-        }, ],
+        }, 
+    
+        {
+            id: 3,
+            name: 'Dr Ben C',
+            departmentId: 1,
+            image_url: '/images/doctor3.jpeg',
+            languages: 'English, Bahasa Malaysia',
+            qualifications: 'MBBS (UM)',
+            location: 'Penang',
+            contact: '+603-7491 9191 (Ext. 16477)'
+        },
+    
+        {
+            id: 4,
+            name: 'Dr Heng R',
+            departmentId: 1,
+            image_url: '/images/doctor4.jpeg',
+            languages: 'English, Bahasa Malaysia',
+            qualifications: 'MBBS (UM)',
+            location: 'Malacca',
+            contact: '+603-7491 9191 (Ext. 16477)'
+        },],
         selectedDoctor: null,
         loading: false,
         error: null,

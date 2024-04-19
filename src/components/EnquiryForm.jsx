@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Form, Button, Container } from 'react-bootstrap';
+import { Form, Button, Container, Col, Card, Row } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default function EnquiryForm() {
@@ -27,8 +27,12 @@ export default function EnquiryForm() {
     };
 
     return (
-        <Container className="mt-5">
-      <h2 className="text-center mb-4">Contact Us</h2>
+        <Container>
+          <Row className="justify-content-center align-items-center" style={{ minHeight: '10vh' }}>
+<Col lg={12} md={8}>
+  <Card className="m-4 p-4" style={{ backgroundColor: 'rgba(255, 255, 255, 0.8)', border: 'none', borderRadius: '15px' }}>
+    <Card.Header as="h4" className="text-center bg-primary text-white">Contact Us</Card.Header>
+    <Card.Body>
       <Form onSubmit={handleSubmit} className="w-75 mx-auto">
         <Form.Label>Name</Form.Label>
           <Form.Control
@@ -71,6 +75,10 @@ export default function EnquiryForm() {
           </Button>
         </div>
       </Form>
+      </Card.Body>
+      </Card>
+      </Col>
+      </Row>
     </Container>
   );
 }
