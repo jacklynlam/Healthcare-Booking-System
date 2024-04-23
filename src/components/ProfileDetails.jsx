@@ -1,10 +1,9 @@
-import { getAuth, updateProfile } from "firebase/auth";
-import { doc, updateDoc, getDoc } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { db, storage } from "../firebase";
+import { getAuth, updateProfile } from "firebase/auth";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { storage } from "../firebase";  
 import { AuthContext } from "../components/AuthProvider";
 import { Card, Col, Row } from 'react-bootstrap';
 
@@ -15,10 +14,8 @@ export default function Profile() {
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
         username: '',
-        email: '', // Initialize as empty string, will update from currentUser in useEffect
+        email: '',  // Initialize email state
         photoURL: '',
-        contactNumber: '',
-        insuranceDetails: ''
     });
     const [file, setFile] = useState(null);
 
@@ -26,35 +23,13 @@ export default function Profile() {
         if (!currentUser) {
             navigate("/login");
         } else {
-            const loadProfile = async () => {
-                const userRef = doc(db, "users", currentUser.uid);
-                const userDoc = await getDoc(userRef);
-                if (userDoc.exists()) {
-                    const data = userDoc.data();
-                    console.log(data);
-                    setFormData({
-                        username: data.username || currentUser.displayName,
-                        email: currentUser.email,
-                        photoURL: data.photoURL || currentUser.photoURL,
-                        contactNumber: data.contactNumber || '',
-                        insuranceDetails: data.insuranceDetails || ''
-                    });
-                } else {
-                    // Set formData from currentUser if the Firestore document is missing
-                    console.log('ran');
-                    console.log(currentUser)
-                    setFormData({
-                        username: currentUser.displayName || '',
-                        email: currentUser.email,
-                        photoURL: currentUser.photoURL || '',
-                        contactNumber: '',
-                        insuranceDetails: ''
-                    });
-                }
-            };
-            loadProfile();
+            setFormData({
+                username: currentUser.displayName || '',
+                email: currentUser.email, 
+                photoURL: currentUser.photoURL || '',
+            });
         }
-    }, [currentUser, navigate]); // Added navigate to dependency array
+    }, [currentUser, navigate]);
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
@@ -76,7 +51,10 @@ export default function Profile() {
             return downloadURL;
         } catch (error) {
             console.error('Failed to upload profile picture: ', error);
-            toast.error("Failed to upload profile picture.");
+            toast.error("Failed to upload profile picture.", {
+                autoClose: 2000,
+                position: "top-center",
+              });
             throw new Error('Failed to upload profile picture');
         }
     };
@@ -84,96 +62,69 @@ export default function Profile() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
+        let photoURL = formData.photoURL;  // Use existing URL unless a new file was uploaded
 
-        let photoURL = formData.photoURL; // Keep this outside to use in all blocks
-
-        // Handle file upload separately
         if (file) {
             try {
-                console.log('Uploading file...');
-                photoURL = await uploadProfilePicture();  // Assume this might throw an error which will be caught
-                setFormData(prevState => ({ ...prevState, photoURL }));  // Update state with the new photo URL
-                console.log('File uploaded successfully:', photoURL);
+                photoURL = await uploadProfilePicture();  // Upload and get new URL
+                setFormData(prevState => ({ ...prevState, photoURL }));
             } catch (error) {
-                console.error('Failed to upload file:', error);
                 toast.error("Failed to upload profile picture: " + error.message);
                 setLoading(false);
-                return;  // Stop further execution if file upload fails
+                return;  // Exit if upload fails
             }
         }
 
-        // Update Firebase Auth profile
-        try {
-            console.log('Updating Firebase Auth profile...');
-            await updateProfile(currentUser, { displayName: formData.username, photoURL });
-            console.log('Firebase Auth profile updated successfully');
-        } catch (error) {
-            console.error('Failed to update Firebase Auth profile:', error);
-            setLoading(false);
-            return;  // Stop further execution if auth update fails
+        if (formData.username !== currentUser.displayName || photoURL !== currentUser.photoURL) {
+            try {
+                await updateProfile(currentUser, { displayName: formData.username, photoURL });
+                toast.success("Profile updated successfully!", {
+                    autoClose: 2000,
+                    position: "top-center",
+                  });
+            } catch (error) {
+                console.error('Failed to update Firebase Auth profile:', error);
+                toast.error("Failed to update profile: " + error.message, {
+                    autoClose: 2000,
+                    position: "top-center",
+                  });
+            }
         }
 
-        // Update Firestore document
-        try {
-            console.log('Updating Firestore document...');
-            const userRef = doc(db, "users", currentUser.uid);
-            await updateDoc(userRef, {
-                username: formData.username,
-                email: formData.email,  // This field update might be redundant if your auth system manages emails
-                contactNumber: formData.contactNumber,
-                insuranceDetails: formData.insuranceDetails,
-                photoURL  // Ensure photoURL is updated or set initially
-            });
-            console.log('Firestore document updated successfully');
-            toast.success("Profile updated successfully!");
-        } catch (error) {
-            console.error('Failed to update Firestore document:', error);
-         } finally {
-            setLoading(false);
-        }
-
-        // Optionally navigate to another route on success
-        navigate("/profile"); // Adjust according to your routing needs
-    }
+        setLoading(false);
+        navigate("/profile");  // Navigate to profile page or dashboard as needed
+    };
 
     return (
         <div className="container mt-3">
             <Row className="justify-content-center align-items-center" style={{ minHeight: '10vh' }}>
-          <Col lg={10} md={6}>
-            <Card className="m-4 p-4" style={{ backgroundColor: 'rgba(255, 255, 255, 0.8)', border: 'none', borderRadius: '15px' }}>
-              <Card.Header as="h4" className="text-center bg-primary text-white">Profile</Card.Header>
-              <Card.Body>
-                        <form onSubmit={handleSubmit}>
-                <div className="mb-3">
-                    <label htmlFor="photoURL" className="form-label">Profile Picture</label>
-                    <input type="file" className="form-control" id="photoURL" onChange={handleImageChange} />
-                    {formData.photoURL && (
-                        <img src={formData.photoURL} alt="Profile" className="img-thumbnail mt-2 centered" style={{ width: "200px", height: "200px" }} />
-                    )}
-                </div>
-                <div className="mb-3">
-                    <label htmlFor="username" className="form-label">Username</label>
-                    <input type="text" className="form-control" id="username" value={formData.username} onChange={e => setFormData({ ...formData, username: e.target.value })} />
-                </div>
-                <div className="mb-3">
-                    <label htmlFor="email" className="form-label">Email (cannot be changed)</label>
-                    <input type="email" className="form-control" id="email" value={formData.email} readOnly />
-                </div>
-                <div className="mb-3">
-                    <label htmlFor="contactNumber" className="form-label">Contact Number</label>
-                    <input type="text" className="form-control" id="contactNumber" value={formData.contactNumber} onChange={e => setFormData({ ...formData, contactNumber: e.target.value })} />
-                </div>
-                <div className="mb-3">
-                    <label htmlFor="insuranceDetails" className="form-label">Insurance Details</label>
-                    <textarea className="form-control" id="insuranceDetails" value={formData.insuranceDetails} onChange={e => setFormData({ ...formData, insuranceDetails: e.target.value })}></textarea>
-                </div>
-                <button type="submit" className="btn btn-primary" disabled={loading}>
-                    {loading ? "Updating..." : "Update Profile"}
-                </button>
-            </form>
-            </Card.Body>
-            </Card>
-            </Col>
+                <Col lg={10} md={6}>
+                    <Card className="m-4 p-4" style={{ backgroundColor: 'rgba(255, 255, 255, 0.8)', border: 'none', borderRadius: '15px' }}>
+                        <Card.Header as="h4" className="text-center bg-primary text-white">Profile</Card.Header>
+                        <Card.Body>
+                            <form onSubmit={handleSubmit}>
+                                <div className="mb-3">
+                                    <label htmlFor="photoURL" className="form-label">Profile Picture</label>
+                                    <input type="file" className="form-control" id="photoURL" onChange={handleImageChange} />
+                                    {formData.photoURL && (
+                                        <img src={formData.photoURL} alt="Profile" className="img-thumbnail mt-2 centered" style={{ width: "200px", height: "200px" }} />
+                                    )}
+                                </div>
+                                <div className="mb-3">
+                                    <label htmlFor="username" className="form-label">Username</label>
+                                    <input type="text" className="form-control" id="username" value={formData.username} onChange={e => setFormData({ ...formData, username: e.target.value })} />
+                                </div>
+                                <div className="mb-3">
+                                    <label htmlFor="email" className="form-label">Email (cannot be changed)</label>
+                                    <input type="email" className="form-control" id="email" value={formData.email} readOnly />
+                                </div>
+                                <button type="submit" className="btn btn-primary" disabled={loading}>
+                                    {loading ? "Updating..." : "Update Profile"}
+                                </button>
+                            </form>
+                        </Card.Body>
+                    </Card>
+                </Col>
             </Row>
         </div>
     );
